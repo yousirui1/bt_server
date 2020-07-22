@@ -1,0 +1,9 @@
+[12/Jun/2020:06:42:51 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[12/Jun/2020:06:42:54 +0000] :File: ./src/main.c, Line: 00560:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 192.169.27.217
+[12/Jun/2020:06:42:54 +0000] :File: ./src/main.c, Line: 00400:  process_msg 2000
+[12/Jun/2020:06:42:54 +0000] :File: ./src/main.c, Line: 00354:  cli->data_buf {"track_ip": "192.169.27.165", "track_port": 1337, "time_out": 1000}
+[12/Jun/2020:06:42:54 +0000] :File: ./src/main.c, Line: 00372:  tracker 192.169.27.165:1337
+[12/Jun/2020:06:42:54 +0000] :File: ./src/main.c, Line: 00582:  client close ip: 192.169.27.217 port 0
+[12/Jun/2020:06:42:54 +0000] :File: ./src/main.c, Line: 00560:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 192.169.27.217
+[12/Jun/2020:06:42:54 +0000] :File: ./src/main.c, Line: 00400:  process_msg 2005
+[12/Jun/2020:06:42:54 +0000] :File: ./src/main.c, Line: 00307:  {"file_path": "/opt/slow/instances/_base/test.img", "torrent_path": "/opt/slow/instances/_base/test.torrent"}

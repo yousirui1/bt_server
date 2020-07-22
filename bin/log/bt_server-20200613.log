@@ -1,0 +1,70 @@
+[13/Jun/2020:09:41:37 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:09:42:25 +0000] :File: ./src/main.c, Line: 00555:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:09:42:27 +0000] :File: ./src/main.c, Line: 00395:  process_msg 2003
+[13/Jun/2020:09:42:27 +0000] :File: ./src/main.c, Line: 00277:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
+[13/Jun/2020:09:42:27 +0000] :File: ./src/main.c, Line: 00669:  process msg error : ip: 127.0.0.1 port 0
+[13/Jun/2020:09:43:27 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:09:43:28 +0000] :File: ./src/main.c, Line: 00555:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:09:43:29 +0000] :File: ./src/main.c, Line: 00395:  process_msg 2003
+[13/Jun/2020:09:43:29 +0000] :File: ./src/main.c, Line: 00277:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
+[13/Jun/2020:09:43:30 +0000] :File: ./src/main.c, Line: 00669:  process msg error : ip: 127.0.0.1 port 0
+[13/Jun/2020:09:44:29 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:09:44:35 +0000] :File: ./src/main.c, Line: 00555:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:09:44:37 +0000] :File: ./src/main.c, Line: 00395:  process_msg 2003
+[13/Jun/2020:09:44:37 +0000] :File: ./src/main.c, Line: 00277:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
+[13/Jun/2020:09:44:37 +0000] :File: ./src/main.c, Line: 00669:  process msg error : ip: 127.0.0.1 port 0
+[13/Jun/2020:09:46:39 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:09:47:35 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:09:48:26 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:09:49:17 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:09:50:33 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:10:35:37 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:10:35:42 +0000] :File: ./src/main.c, Line: 00556:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:10:35:43 +0000] :File: ./src/main.c, Line: 00396:  process_msg 2003
+[13/Jun/2020:10:35:43 +0000] :File: ./src/main.c, Line: 00278:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
+[13/Jun/2020:10:35:43 +0000] :File: ./src/main.c, Line: 00670:  process msg error : ip: 127.0.0.1 port 0
+[13/Jun/2020:10:38:38 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:10:38:42 +0000] :File: ./src/main.c, Line: 00561:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:10:38:43 +0000] :File: ./src/main.c, Line: 00401:  process_msg 2003
+[13/Jun/2020:10:38:43 +0000] :File: ./src/main.c, Line: 00277:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
+[13/Jun/2020:10:39:05 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:10:39:40 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:10:39:41 +0000] :File: ./src/main.c, Line: 00561:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:10:39:43 +0000] :File: ./src/main.c, Line: 00401:  process_msg 2003
+[13/Jun/2020:10:39:43 +0000] :File: ./src/main.c, Line: 00277:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
+[13/Jun/2020:10:41:17 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:10:41:19 +0000] :File: ./src/main.c, Line: 00561:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:10:41:20 +0000] :File: ./src/main.c, Line: 00401:  process_msg 2003
+[13/Jun/2020:10:41:20 +0000] :File: ./src/main.c, Line: 00277:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
+[13/Jun/2020:10:41:57 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:10:42:00 +0000] :File: ./src/main.c, Line: 00561:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:10:42:01 +0000] :File: ./src/main.c, Line: 00401:  process_msg 2003
+[13/Jun/2020:10:42:01 +0000] :File: ./src/main.c, Line: 00277:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
+[13/Jun/2020:10:43:07 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:10:43:10 +0000] :File: ./src/main.c, Line: 00561:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:10:43:11 +0000] :File: ./src/main.c, Line: 00401:  process_msg 2003
+[13/Jun/2020:10:43:11 +0000] :File: ./src/main.c, Line: 00277:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
+[13/Jun/2020:10:44:37 +0000] :File: ./src/socket.c, Line: 00179:  tcp bind port 20001
+[13/Jun/2020:10:44:42 +0000] :File: ./src/main.c, Line: 00561:  client index: 0 total_connections: 1 maxi: 0 connfd ip: 127.0.0.1
+[13/Jun/2020:10:44:44 +0000] :File: ./src/main.c, Line: 00401:  process_msg 2003
+[13/Jun/2020:10:44:44 +0000] :File: ./src/main.c, Line: 00277:  cli->data_buf {
+	"mac":	"00:0C:29:07:B5:0E"
+}
