@@ -159,13 +159,13 @@ uint32_t add_task(const char *torrent, const char *save_path)
 
     }
 #endif
+
     //lt::torrent_handle 
     //if(physic_offset)
         ;//params.ti->set_physicaldrive_offset(physic_offset);
 	lt::torrent_handle th = ses->add_torrent(params);
     taks_torrent.push_back(th);
 	std::cout<<"handle" <<th.id()<<endl;
-	//printf("handle id %d", th.id());
 	return th.id();
 }
 
@@ -195,19 +195,15 @@ bool handle_alert(lt::alert *a, lt::torrent_handle &th)
         if(!p->status.empty())
         {
             lt::torrent_status s = th.status(lt::torrent_handle::query_save_path);
-#if 0
 			//cout<<"torrent_id "<<th.id();
             if(current_time - last_time > 1)
             {
-#if 1
                 cout << state(s.state) << " download rate " << s.download_payload_rate / 1000 << "KB /s, total_download " << s.total_done / 1000 << "KB, uprate " << s.upload_rate / 1000 << "KB /s, total_up " << s.total_upload / 1000
                 << "KB, progress " << s.progress << " progress_ppm " << s.progress_ppm << " progress " << s.progress_ppm / 10000 << "  " << endl;
                 cout << cinfo << endl;
-#endif
                 std::cout.flush();
                 last_time = current_time;
             }
-#endif
         }
 #endif
     }
@@ -235,15 +231,16 @@ int get_task_info(uint32_t id, struct task_info *info)
 	{
 		if(id != torrent.id())
 		{
-			cout<<"torrent.id"<<torrent.id()<<endl;
-			cout<<id<<id<<endl;
 			continue;
 		}
 		lt::torrent_status s = torrent.status(lt::torrent_handle::query_save_path);
+
+#if 0
 		cout << state(s.state) << " download rate " << s.download_payload_rate / 1000 << "KB /s, total_download " << 
 		s.total_done / 1000 << "KB, uprate " << s.upload_rate / 1000 << "KB /s, total_up " << s.total_upload / 1000
         << "KB, progress " << s.progress << " progress_ppm " << s.progress_ppm << " progress " << s.progress_ppm / 10000 <<endl;
 		std::cout.flush();	
+#endif
 
 		strcpy(info->state, state(s.state));	
 		info->progress = s.progress_ppm / 10000;
@@ -268,12 +265,11 @@ int start_bt(const int port)
 
 	(void)time(&current_time);
 	last_time = current_time;
-	//add_task("win10.torrent", "./");	
     for(;;)
     {
         if(taks_torrent.size() == 0)
         {
-            usleep(500000);
+            usleep(5000);
         }
 		(void)time(&current_time);
         for(auto torrent : taks_torrent)
@@ -389,6 +385,7 @@ int make_torrent(char *file_path, char *torrent_path, char *track)
     std::string udp_track ="udp://"+ track_ip + "/announce";
 	
 	trackers.push_back(http_track);
+	trackers.push_back(udp_track);
 
 	int tier = 0;	
 	for(std::string const& tr:trackers)

@@ -437,7 +437,6 @@ static void tcp_loop(int listenfd)
                 maxi = i;
             if(connfd > maxfd)
                 maxfd = connfd;
-            DEBUG("client index: %d total_connections: %d maxi: %d connfd ip: %s",i, total_connections, maxi, cli->ip);
             if(--nready <= 0)
                 continue;
         }
@@ -458,8 +457,6 @@ static void tcp_loop(int listenfd)
                             if(errno == EINTR || errno == EAGAIN)
                                 continue;
                         }
-                        DEBUG("client close ip: %s port %d",
-                                    clients[i]->ip, clients[i]->port);
 
                         FD_CLR(clients[i]->fd, &allset);
                         close_client(clients[i]);
@@ -470,7 +467,6 @@ static void tcp_loop(int listenfd)
                     clients[i]->pos += ret;
                     if(clients[i]->pos != PACKET_LEN)
                         continue;
-
 #if 0
                     if(read_msg_syn(clients[i]->head_buf) != DATA_SYN)
                     {
@@ -533,8 +529,8 @@ static void tcp_loop(int listenfd)
                             {
                                 if(errno == EINTR || errno == EAGAIN)
                                     continue;
-                                DEBUG("client ip: %s port %d",
-                                         clients[i]->ip, clients[i]->port);
+                                //DEBUG("client ip: %s port %d",
+                                 //        clients[i]->ip, clients[i]->port);
 
                                 FD_CLR(clients[i]->fd, &allset);
                                 close_client(clients[i]);
@@ -550,8 +546,8 @@ static void tcp_loop(int listenfd)
                     {
                         if(process_msg(clients[i]))
                         {
-                            DEBUG("process msg error : ip: %s port %d",
-                                     clients[i]->ip, clients[i]->port);
+                            //DEBUG("process msg error : ip: %s port %d",
+                             //        clients[i]->ip, clients[i]->port);
 
                             FD_CLR(clients[i]->fd, &allset);
                             close_client(clients[i]);
@@ -762,7 +758,6 @@ int main(int argc, char *argv[])
     }
     memset(clients, 0, sizeof(struct client *) * max_connections);
 
-#if 0
 	ret = pthread_create(&pthread_server, NULL, thread_server, (void *)&server_s);
 	if(SUCCESS != ret)
 	{
@@ -774,7 +769,6 @@ int main(int argc, char *argv[])
 	{
 		DIE("create server thread ret %d error %s", ret, strerror(ret));
 	}
-#endif
 
 	ret = pthread_create(&pthread_track, NULL, thread_track, (void *)&track_port);
 	if(SUCCESS != ret)

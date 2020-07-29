@@ -65,6 +65,7 @@ $(exeobj):$(mainobj) $(cppobj)
 	rm -f *.o
 	@echo "Version $(VERSION)"
 	@echo "Build  $(TARGET_ARCH) program $(exeobj) OK"
+	$(CP) $(outdir)/$(exeobj) /home/ysr/ftp/
 
 test:
 	$(CC) -Wall src/test.c src/log.c src/tools.c src/socket.c src/cJSON.c $(DEBUG) -I./include  -o ./bin/test  -lm
