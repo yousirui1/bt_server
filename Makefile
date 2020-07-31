@@ -34,7 +34,7 @@ libobj =
 
 mainobj = main.o log.o tools.o socket.o cJSON.o opentracker.o trackerlogic.o scan_urlencoded_query.o ot_mutex.o ot_stats.o ot_vector.o ot_clean.o ot_udp.o ot_iovec.o ot_fullscrape.o ot_accesslist.o ot_http.o ot_livesync.o ot_rijndael.o
 
-cppobj = torrent.o # torrent.o#client_test.o session_view.o torrent_view.o print.o #torrent.o
+cppobj = bt_client.o # torrent.o#client_test.o session_view.o torrent_view.o print.o #torrent.o
 
 CFLAGS := -I. -I./include -I./libowfat -L./libowfat -L./lib
 
