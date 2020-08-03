@@ -16,11 +16,10 @@ struct task_info
 	unsigned long long total_size;	
 };
 
-int start_bt(int port);
+int bt_client(int port);
 uint32_t add_task(const char *torrent, const char *save_path);
 int get_task_info(uint32_t id, struct task_info *info);
 int make_torrent(char *file_path, char *torrent_path, char *track);
-
 
 #ifdef __cplusplus
 }

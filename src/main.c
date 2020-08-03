@@ -666,7 +666,7 @@ void *thread_torrent(void *param)
     sched.sched_priority = SCHED_PRIORITY_SERVER;
     ret = pthread_attr_setschedparam(&st_attr, &sched);
 
-	start_bt(port);
+	bt_client(port);
     return (void *)ret;
 }
 
