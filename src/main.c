@@ -150,7 +150,7 @@ static int recv_get_task_state(struct client *cli)
 
 		struct task_info info;
 		memset(&info, 0, sizeof(struct task_info));
-		get_task_info(torrent_id, &info);
+		//get_task_info(torrent_id, &info);
 		
 		return send_task_state(cli, &info);		
 	}
@@ -238,6 +238,7 @@ static int recv_add_task(struct client *cli)
 		DEBUG("cJSON_Parse error");
 		return send_code(cli, -1);
 	}	
+	DEBUG("%s", cli->data_buf);
 
 	cJSON* torrent = cJSON_GetObjectItem(root, "torrent");
     cJSON* save_path = cJSON_GetObjectItem(root, "save_path");
@@ -281,6 +282,7 @@ static int recv_set_tracker(struct client *cli)
 static int process_msg(struct client *cli)
 {
 	int ret;
+	DEBUG("process_msg %d", read_packet_order(cli->packet));
 	switch(read_packet_order(cli->packet))
 	{
 		case SET_TRACKER:
@@ -354,6 +356,7 @@ static void tcp_loop(int listenfd)
                 return;
             }
         }
+		DEBUG("select %d", ret);	
         nready = ret;
         /* pipe msg */
         if(FD_ISSET(pipe_tcp[0], &reset))
@@ -481,6 +484,7 @@ static void tcp_loop(int listenfd)
                         continue;
                     }
 #endif
+					DEBUG("1111111111111111111111111111111");
 
                     clients[i]->has_read_head = 1;
 					clients[i]->data_size = read_packet_size(clients[i]->packet) + read_packet_token(clients[i]->packet);

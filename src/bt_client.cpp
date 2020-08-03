@@ -6,68 +6,227 @@
 #include <libtorrent/torrent_info.hpp>
 #include <libtorrent/alert_types.hpp>
 #include <libtorrent/torrent_status.hpp>
+#include "libtorrent/entry.hpp"
+#include "libtorrent/bencode.hpp"
+#include "libtorrent/torrent_info.hpp"
+#include "libtorrent/storage.hpp"
+#include "libtorrent/create_torrent.hpp"
+#include <libtorrent/alert_types.hpp>
+#include <libtorrent/torrent_status.hpp>
+#include "libtorrent/session.hpp"
+
 #include "torrent.h"
+
+extern "C" 
+{
+	#include "base.h"
+}
 
 
 using namespace std;
 using namespace chrono;
-using namespace lt;
 
 time_t last_time;
 extern time_t current_time;
 extern int pipe_bt[2];
 
-shared_ptr<session> m_ses;
-//std::vector<lt::torrent_handle> task_torrent;
+std::shared_ptr<lt::session> m_ses;
+std::vector<lt::torrent_handle> task_torrent;
 
-char const *state(torrent_status::state_t s)
+char const* state(lt::torrent_status::state_t s)
 {
-	switch(s)
-	{
-		case torrent_status::checking_files: return "checking";
-		case torrent_status::downloading_metadata: return "dl metadata";
-		case torrent_status::downloading: return "finished";
-		case torrent_status::finished: return "seeding";
-		case torrent_status::seeding: return "allocating";
-		case torrent_status::checking_resume_data: return "checking resume";
-		default: return "<>";
-	}
-}
-
-int get_task_info(uint32_t id, struct task_info *info)
-{
-
+    switch (s) {
+    case lt::torrent_status::checking_files: return "checking";
+    case lt::torrent_status::downloading_metadata: return "dl metadata";
+    case lt::torrent_status::downloading: return "downloading";
+    case lt::torrent_status::finished: return "finished";
+    case lt::torrent_status::seeding: return "seeding";
+    case lt::torrent_status::allocating: return "allocating";
+    case lt::torrent_status::checking_resume_data: return "checking resume";
+    default: return "<>";
+    }
 }
 
 uint32_t add_task(const char *torrent, const char *save_path)
 {
 	lt::error_code ec;
-	add_torrent_params params;
+	lt::add_torrent_params params;
 	params.save_path = save_path;
-	params.ti = make_shared<torrent_info>(torrent, ec);
+	params.ti = make_shared<lt::torrent_info>(torrent, ec);
 	params.download_limit = 0;
 	params.upload_limit = 0;
 	
-	torrent_handle th = m_ses->add_torrent(std::move(params));
-	//task_torrent.push_back(th);
+	lt::torrent_handle th = m_ses->add_torrent(std::move(params));
+	task_torrent.push_back(th);
 	return th.id();	
+}
+
+std::vector<char> load_file(std::string const &filename)
+{
+    std::fstream in;
+    in.exceptions(std::ifstream::failbit);
+    in.open(filename.c_str(), std::ios_base::in | std::ios_base::binary);
+    in.seekg(0, std::ios_base::end);
+    size_t const size = size_t(in.tellg());
+    in.seekg(0, std::ios_base::beg);
+    std::vector<char> ret(size);
+    in.read(ret.data(), ret.size());
+    return ret;
+}
+
+std::string branch_path(std::string const &f)
+{
+    if(f.empty())
+        return f;
+#ifdef TORRENT_WINDOWS
+    if(f == "\\\\") return "";
+#endif
+    if(f == "/") return "";
+
+    int len = int(f.size());
+    /* if the last character is /o r \ ignore it */
+    if(f[len - 1] == '/' || f[len-1] == '\\')
+        --len;
+    while(len > 0)
+    {
+        --len;
+        if(f[len] == '/' || f[len] == '\\')
+            break;
+    }
+    if(f[len] == '/' || f[len] == '\\') ++len;
+    return std::string(f.c_str(), len);
+}
+
+bool file_filter(std::string const &f)
+{
+    if(f.empty())
+        return false;
+
+    char const *first = f.c_str();
+    char const *sep = strrchr(first, '/');
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
+    char const* altsep = strrchr(first, '\\');
+    if (sep == nullptr || altsep > sep) sep = altsep;
+#endif
+
+    /* if there is no parent path, just set 'sep'
+     * to point to the filename, if there is a 
+     * parent path, skip the '/' character */
+    if(sep == nullptr) sep = first;
+    else ++sep;
+
+    /* return false if the first character of the filename is a */
+    if(sep[0] == '.')
+        return false;
+    std::cerr<<f<<"\n";
+    return true;
 }
 
 int make_torrent(char *file_path, char *torrent_path, char *track)
 {
+    std::string creator_str = "libtorrent";
+    std::string comment_str;
 
+    std::vector<std::string> web_seeds;
+    std::vector<std::string> trackers;
+    std::vector<std::string> collections;
+    std::vector<lt::sha1_hash> similar;
+    int pad_file_limit = -1;
+    int piece_size = 0;
+    lt::create_flags_t flags = {};
+    std::string root_cert;
+    std::string outfile = torrent_path;
+    std::string merklefile;
+    std::string track_ip = track;
+
+    std::cerr<<torrent_path;
+
+#ifdef TORRENT_WINDOWS
+    //outfile = "a.torrent";
+#endif
+
+    std::string full_path = file_path;
+    lt::file_storage fs;
+    lt::add_files(fs, full_path, file_filter, flags);
+    if(fs.num_files() == 0)
+    {
+        //DEBUG("file size error");
+        return ERROR;
+    }
+
+    lt::create_torrent t(fs, piece_size, pad_file_limit, flags);
+
+    std::string http_track ="http://"+ track_ip +"/announce";
+    std::string udp_track ="udp://"+ track_ip + "/announce";
+
+    trackers.push_back(http_track);
+
+    int tier = 0;
+    for(std::string const& tr:trackers)
+    {
+        if(tr == "-") ++ tier;
+        else t.add_tracker(tr, tier);
+    }
+    for(std::string const & ws : web_seeds)
+        t.add_url_seed(ws);
+
+    for(std::string const & c : collections)
+        t.add_collection(c);
+
+
+    for (lt::sha1_hash const& s : similar)
+        t.add_similar_torrent(s);
+
+    auto const num = t.num_pieces();
+    lt::set_piece_hashes(t, branch_path(full_path), [num]
+        (lt::piece_index_t const p) {
+        std::cerr<<"\r"<<p<<"/"<<num;
+    });
+    
+    t.set_creator(creator_str.c_str());
+    if(!comment_str.empty())
+    {
+        t.set_comment(comment_str.c_str());
+    }
+
+    if (!root_cert.empty()) {
+        std::vector<char> const pem = load_file(root_cert);
+        t.set_root_cert(std::string(&pem[0], pem.size()));
+    }
+
+    // create the torrent and print it to stdout
+    std::vector<char> torrent;
+    lt::bencode(back_inserter(torrent), t.generate());
+    if (!outfile.empty()) {
+        std::fstream out;
+        out.exceptions(std::ifstream::failbit);
+        out.open(outfile.c_str(), std::ios_base::out | std::ios_base::binary);
+        out.write(torrent.data(), torrent.size());
+    }
+    else {
+        std::cout.write(torrent.data(), torrent.size());
+    }
+
+    if (!merklefile.empty()) {
+        std::fstream merkle;
+        merkle.exceptions(std::ifstream::failbit);
+        merkle.open(merklefile.c_str(), std::ios_base::out | std::ios_base::binary);
+        auto const& tree = t.merkle_tree();
+        merkle.write(reinterpret_cast<char const*>(tree.data()), tree.size() * 20);
+    }
+    return SUCCESS;
 }
 
 int bt_client(int port)
 {
-	settings_pack pack;
+	lt::settings_pack pack;
     pack.set_int(lt::settings_pack::alert_mask
         , lt::alert::error_notification
         | lt::alert::storage_notification
         | lt::alert::status_notification);
     pack.set_str(lt::settings_pack::user_agent, "ltclient/""test");
 
-	m_ses = make_shared<session>(pack);
+	m_ses = make_shared<lt::session>(pack);
 
 	char buf[1024] = {0};
 	int ret, maxfd = -1, nready;
@@ -114,10 +273,8 @@ int bt_client(int port)
             if(--nready <= 0)
                 continue;
         } 
-
 		std::vector<lt::alert *> alerts;
 		m_ses->pop_alerts(&alerts);
-		
 		for(lt::alert const *a : alerts)
 		{
 			if(auto st = lt::alert_cast<lt::state_update_alert>(a))
